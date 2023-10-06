@@ -1,0 +1,15 @@
+{
+    "files.associations": {
+        "*.inc": "c",
+        "stdio.h": "c",
+        "string.h": "c",
+        "math.h": "c",
+        "xutility": "c",
+        "strfuncs.h": "c",
+        "stdlib.h": "c",
+        "lexer.h": "c",
+        "parser.h": "c",
+        "asm.h": "c",
+        "lieutenant.h": "c"
+    }
+}

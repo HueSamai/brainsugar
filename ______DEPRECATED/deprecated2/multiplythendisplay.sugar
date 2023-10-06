@@ -1,0 +1,87 @@
+PUT 10,48      ; 10 stores 48
+PUT 11,99      ; 11 stores 99
+PUT 12,100     ; 12 stores 
+PUT 13,9       ; 13 stores 9
+PUT 14,10      ; 14 stores 10
+
+; get inputs and convert them from ascii into integers
+INP 0
+SUB 0,10
+MOO 0
+
+INP 1
+SUB 1,10
+MOO 1
+
+; multiply inputs
+MOV 0,2
+
+DEC 1
+SKP 1
+    ADD 0,2
+    MOO 2
+    DEC 1
+JNZ 1
+
+; displaying the result
+MOV 2,0
+
+PUT 1,0     ; hundreds
+PUT 2,0     ; tens
+PUT 3,0     ; units
+
+; we want to move our people into a buffer to not mess up our values we are trying to display
+MOV 0,4
+
+; let's figure out our hundreds
+
+; check if our value is greater than 99
+CMP 4,11
+
+; if it is
+SKP
+    ; increment our dandy hundreds by 1
+    INC 1
+
+    ; subtract buffer by a hundred
+    SUB 4,12
+    MOO 4
+
+    ; check if our value is greater than 99
+    CMP 4,11
+; if it is not we will exit...
+JNZ
+
+; NOW ITS TIME FOR THE TENS
+; check if our value is greater than 9
+CMP 4,13
+
+; if it is
+SKP
+    ; increment tens by 1
+    INC 2
+
+    ; subtract buffer by 10
+    SUB 4,14
+    MOO 4
+
+    ; check if our value is greater than 9
+    CMP 4,13
+; if it is not we will exit...
+JNZ
+
+; DISPLAY HUNDREDS
+ADD 1,10
+MOO 1
+OUT 1
+
+; DISPLAY TENS
+ADD 2,10
+MOO 2
+OUT 2
+
+; DISPLAY ONES
+; its easy cause they're the only ones left lol
+ADD 4,10
+MOO 3
+OUT 3

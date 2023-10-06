@@ -1,0 +1,32 @@
+PUT 0,5    ; first number
+PUT 1,5    ; second number
+
+PTA 0       ; move zero into A register
+MVB 0       ; move first number into B
+ADD         ; add the two numbers
+
+MOO 2       ; move output to register 2
+
+MVA 1       ; move address 1 into A
+PTB 1       ; put value 1 into register B
+SUB         ; subtract them from each other
+
+MOO 1       ; move output to address 1
+
+SKP         ; if the last output was zero will skip this step. this will only happen if the second number was a 1
+
+MVA 2       ; move last output into A register
+MVB 0       ; load first number into B
+ADD         ; add the two numbers
+
+MOO 2       ; move output to register 2
+
+MVA 1       ; move address 1 into A
+PTB 1       ; load value 1 into register B
+SUB         ; subtract them from each other
+
+MOO 1
+
+JMP         ; if the previous calculation was not zero it will go back to the skip.
+
+OUT 2,1

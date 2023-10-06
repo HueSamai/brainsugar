@@ -1,0 +1,78 @@
+
+// saying int is just the same as byte data type. the only type fudge knows.
+typedef int as byte;
+// saying ptr is just the same as int
+typedef ptr as int;
+typedef chr as int;
+typedef flt as byte;
+typdef i32 as 
+{
+    int a;
+    int b;
+    int c;
+    int d;
+};
+
+typedef lng as
+{
+    i32 a;
+    i32 b;
+};
+
+// mem_ptr is our address
+ptr mem_ptr_start = 20;
+ptr mem_ptr = 20;
+
+// find some free memory
+// specifies how many bytes
+fn memfind(int bytes)
+{
+    // get value at pointer
+    int currentBytes = 0;
+    int retries = 0;
+    while (currentBytes < bytes)
+    {
+        if (.mem_ptr == 0)
+        {
+            currentBytes++;
+            mem_ptr++;
+        }
+        else
+        {
+            if (retries > 0)
+            {
+                return 0; // null value
+            }
+
+            currentBytes = 0;
+            mem_ptr = mem_ptr_start;
+            retries++;
+        }
+    }
+
+    for (int i = 0; i < bytes; i++)
+    {
+        // making it so that these values are actually being used
+        mem_ptr[i - bytes] = 1;
+    }
+
+    // return ptr to memory
+    return mem_ptr - bytes;
+}
+
+fn sum(int n)
+{
+    if (n == 1)
+    {
+        return 1;
+    }
+    return n + sum(n - 1);
+}
+
+fn main()
+{
+    chr. str = "Hello, World!";
+    chr first = str[0];
+    print(str);
+    sum(10);
+}

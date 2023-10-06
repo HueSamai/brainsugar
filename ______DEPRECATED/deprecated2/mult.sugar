@@ -1,0 +1,10 @@
+PUT 0,10
+PUT 1,5
+
+MOV 0,2
+DEC 1
+SKP 1
+    ADD 0,2
+    MOO 2
+    DEC 1
+JNZ 1

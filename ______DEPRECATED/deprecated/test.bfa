@@ -1,0 +1,118 @@
+INP 0
+MVA 0
+PTB 48
+SUB
+MOO 0
+
+INP 1
+MVA 1
+PTB 48
+SUB
+MOO 1
+
+MOV 0,2
+MVA 1
+PTB 1
+SUB
+SKP
+MOO 1
+MVA 0
+MVB 2
+ADD
+MOO 2
+MVA 1
+PTB 1
+SUB
+MOO 1
+JMP
+
+MOV 2,0
+
+PUT 1,0     ; hundreds
+PUT 2,0     ; tens
+PUT 3,0     ; units
+
+; we want to move our people into a buffer to not mess up our values we are trying to display
+MOV 0,4
+
+; let's figure out our hundreds
+
+; check if our value is greater than 99
+MVA 4
+PTB 99
+CMG
+
+; if it is
+SKP
+    ; increment our dandy hundreds by 1
+    MVA 1
+    PTB 1
+    ADD
+    MOO 1
+
+    ; subtract buffer by a hundred
+    MVA 4
+    PTB 100
+    SUB
+    MOO 4
+
+    ; check if our value is greater than 99
+    MVA 4
+    PTB 99
+    CMG
+; if it is not we will exit...
+JMP
+
+
+
+; NOW ITS TIME FOR THE TENS
+; check if our value is greater than 9
+MVA 4
+PTB 9
+CMG
+
+; if it is
+SKP
+    ; increment tens by 1
+    MVA 2
+    PTB 1
+    ADD
+    MOO 2
+
+    ; subtract buffer by 10
+    MVA 4
+    PTB 10
+    SUB
+    MOO 4
+
+    ; check if our value is greater than 9
+    MVA 4
+    PTB 9
+    CMG
+; if it is not we will exit...
+JMP
+
+; DISPLAY HUNDREDS
+MVA 1
+PTB 48
+ADD
+MOO 1
+
+OUT 1
+
+; DISPLAY TENS
+MVA 2
+PTB 48
+ADD
+MOO 2
+
+OUT 2
+
+; DISPLAY ONES
+; its easy cause they're the only ones left lol
+MVA 4
+PTB 48
+ADD
+MOO 3
+
+OUT 3

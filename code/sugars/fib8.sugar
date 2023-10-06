@@ -1,0 +1,77 @@
+start at main
+; a better fibonacci program than fib.sugar
+
+fib_n = r0
+fib1 = r1
+fib2 = r2
+fib_ret = r3
+
+units = r4
+tens = r5
+hundreds = r6
+
+space = r7
+numtochar = x30
+
+main:
+    put space,32
+    ; set input amount of numbers
+    put fib_n,20
+
+    put fib1,0
+    put fib2,1
+
+    ; display zero
+    call display_number
+
+    ; subtract 2 from fib_n
+    subn fib_n, 2
+
+    jnz FWD5,fib_n
+        add fib1,fib2,fib_ret
+        call display_number
+
+        mov fib2,fib1
+        mov fib_ret,fib2
+
+        subn fib_n,1
+    jmp BWD5
+    hlt
+
+display_number:
+    mov fib_ret,units
+
+    put tens,0
+    put hundreds,0
+
+    cmpn units,99
+    jfz FWD5
+        addn hundreds,1
+        subn units,100
+        cmpn units,99
+    jmp BWD4
+
+    cmpn units,9
+    jfz FWD5
+        addn tens,1
+        subn units,10
+        cmpn units,9
+    jmp BWD4
+
+    jfz FWD4, hundreds
+        addn hundreds,numtochar
+        prt hundreds
+        jmp FWD2
+
+    jfz FWD3,tens
+    addn tens,numtochar
+    prt tens
+
+    addn units,numtochar
+    prt units
+
+    prt space
+
+    ret
+
+

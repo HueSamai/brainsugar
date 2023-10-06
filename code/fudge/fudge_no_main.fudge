@@ -1,0 +1,6 @@
+include standard;
+
+byte main()
+{
+    byte a = 0;
+}

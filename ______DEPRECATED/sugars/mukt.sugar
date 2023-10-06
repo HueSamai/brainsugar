@@ -1,0 +1,10 @@
+PUT 0,10
+PUT 1,5
+MOV 0,2
+DEC 1
+JFZ 10,1
+    ADD 0,2
+    MOO 2
+    DEC 1
+JMP 5
+HLT

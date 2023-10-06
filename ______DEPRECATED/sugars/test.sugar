@@ -1,0 +1,5 @@
+MEM 20
+PUT 0,10
+PUT 1,20
+BMV 1,0
+HLT

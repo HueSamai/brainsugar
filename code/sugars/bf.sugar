@@ -1,0 +1,15 @@
+start at main
+
+x = r0
+datapointer = r1
+
+
+main:
+    inp x
+    equn x,escape_char
+
+    jmp FWD7
+        
+    jfz BWD6
+
+

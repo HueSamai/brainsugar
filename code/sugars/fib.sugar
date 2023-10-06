@@ -1,0 +1,132 @@
+start at main
+; check fib8.sugar for a better fib program
+
+; let's setup some macros
+
+; for fib
+fib_n = r2
+fib_ret = r3
+
+; for displaying numbers
+numtochar = x30
+units = r4
+tens = r5
+hundreds = r6
+space = r7
+
+; get input
+escape_char = x5c
+x = r9
+y = r10
+z = r11
+w = r12
+
+; iterator
+i = r8
+
+;debug
+debug1 = r20
+debug2 = r21
+
+mult:
+    put z,10
+    put w,0
+
+    jfz FWD4,z
+        subn z,1
+        add w,i,w
+    jmp BWD3
+
+    mov w,i
+    ret
+
+main:
+    put space, 32
+    put debug1, 72
+    put debug2, 74
+    
+
+    inp x
+    equn x,escape_char
+
+    jmp FWD7
+        mov x,y
+        subn y,numtochar
+
+        call mult
+        add i,y,i
+
+        inp x
+        equn x,escape_char
+    jfz BWD6
+    
+    jmp FWD5
+        call call_fibonacci     ; jump to call_fibonacci
+        call display_number
+        subn i,1
+        addn fib_n,1
+    jnz BWD4, i
+    hlt
+
+; sub routine to display a number
+display_number:
+    mov fib_ret,units
+
+    put tens,0
+    put hundreds,0
+
+    cmpn units,99
+    jfz FWD5
+        addn hundreds,1
+        subn units,100
+        cmpn units,99
+    jmp BWD4
+
+    cmpn units,9
+    jfz FWD5
+        addn tens,1
+        subn units,10
+        cmpn units,9
+    jmp BWD4
+
+    addn hundreds,numtochar
+    addn tens,numtochar
+    addn units,numtochar
+
+    prt hundreds
+    prt tens
+    prt units
+
+    prt space
+
+    ret
+
+; helper sub routine to call fibonacci sub routine
+call_fibonacci:
+    push fib_n,r1,r2          ; push fib_n's, reg1's and reg2's value onto the stack
+    call fibonacci
+    pull r2,r1,fib_n          ; pull values from the stack and assign them to 2,1, and fib_n
+    ret                     ; return to where this was called
+
+; fibonacci sub routine
+fibonacci:
+    equn fib_n,0            ; check if fib_n equals zero
+    jfz FWD3                ; FWD3 is evaluated by the compiler to be 3 instructions ahead
+        put fib_ret,0
+        ret
+    
+    equn fib_n,1
+    jfz FWD3
+        put fib_ret,1
+        ret
+    
+    subn fib_n,1
+    call call_fibonacci
+    mov fib_ret,r1
+    
+    subn fib_n,1
+    call call_fibonacci
+    mov fib_ret,r2
+
+    add r1,r2,fib_ret
+    ret
