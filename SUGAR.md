@@ -195,13 +195,30 @@ NOTE: FWD(n) and BWD(n), DON'T consider lines with just comments and empty lines
 ## user defined macros
 
 after the first line, 'start at', you can define your own custom macros, with the format: macro_name = macro_value
-OR
-macro_name macro_value (the equal sign is not necessary)
 macro_values can only be numbers.
 
 this can be useful to keep track of certain registers, for instance, registers used for function arguments, so that you don't have to remember all of them.
 
 macros can't have the same names as sections.
+
+you can also define relative macros, with: macro_name ~ macro_value
+this is used for linking, so that sugar files can have unique registers, without any overlap. this is only used for global values. if you want to avoid register overlap push it on the stack, then pull it back after you're done using it. this works by adding an offset to these relative macro values. the first sugar file will have a macro offset of 0, then the next will have an offset of the highest relative macro value + 1, and the highest macro values + 1 keep on getting added onto the offset.
+
+EXAMPLE:
+first sugar file
+```
+version_string ~ 0
+_ ~ 10
+```
+
+second sugar file
+```
+other_string ~ 0
+__ ~ 10
+```
+
+in this example the '_' is used to mark the end of the string, cause otherwise the offset would just be 1, instead of 11.
+when brain starts parsing the secon sugar file, other_string becomes 11, and '__' becomes 21. '_' and '\_\_' are just names, and can be anything.
 
 ## using raw
 here is a list of what NOT to do when using raw:

@@ -19,6 +19,10 @@ void addtoken(int, char*);
 
 void lex(char* path)
 {
+    tki = 0;
+    line = 1;
+    chi = 1;
+
     file = fopen(path, "r");
     if (file == NULL)
     {
@@ -155,6 +159,14 @@ void lexnext()
 
     if (c == '=')
     {
+        addtoken(TOKEN_EQUALS, NULL);
+        c = nextc();
+        return;
+    }
+
+    if (c == '~')
+    {
+        addtoken(TOKEN_TILDA, NULL);
         c = nextc();
         return;
     }

@@ -81,7 +81,8 @@ typedef struct ins
 
 ins_t instructions[9999];
 int numberOfInstructions;
-void parse();
+void parseFirst();
+void parseOther();
 
 
 // ----------------------PRIVATE-------------------------

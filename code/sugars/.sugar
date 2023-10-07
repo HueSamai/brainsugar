@@ -1,0 +1,43 @@
+; no 'start at ...' because this is a sugar "library"
+dn_units = r4
+dn_tens = r5
+dn_hundreds = r6
+
+dn_numtochar = x30
+
+; put a value in the register 0 as first input
+display_number:
+    mov 0,dn_units
+
+    put sg_test,x31
+
+    put dn_tens,0
+    put dn_hundreds,0
+
+    cmpn dn_units,99
+    jfz FWD5
+        addn dn_hundreds,1
+        subn dn_units,100
+        cmpn dn_units,99
+    jmp BWD4
+
+    cmpn dn_units,9
+    jfz FWD5
+        addn dn_tens,1
+        subn dn_units,10
+        cmpn dn_units,9
+    jmp BWD4
+
+    jfz FWD4, dn_hundreds
+        addn dn_hundreds,dn_numtochar
+        prt dn_hundreds
+        jmp FWD2
+
+    jfz FWD3,dn_tens
+    addn dn_tens,dn_numtochar
+    prt dn_tens
+
+    addn dn_units,dn_numtochar
+    prt dn_units
+
+    ret

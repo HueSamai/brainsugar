@@ -8,6 +8,8 @@
 #define TOKEN_COLON 2
 #define TOKEN_COMMA 3
 #define TOKEN_NEWLINE 4
+#define TOKEN_EQUALS 5
+#define TOKEN_TILDA 6
 
 static char tokenTypes[5][20] = {
     "identifier",

@@ -14,12 +14,14 @@
 
 int insIndex = 0;
 int tokenIndex = 0;
+int relativeMacroOffset = 0;
+int storedRelativeMacroOffset = 0;
 token_t current;
 pseudoins_t pseudoInstructions[9999];
 
 map_t* macroMap;
 
-void parse()
+void parseFirst()
 {
     macroMap = mapcreate(MACRO_SIZE);
 
@@ -32,22 +34,40 @@ void parse()
     
     parseSections();
 
-    // add termination instruction
-    addPseudoIns(INS_NULL, NULL);
+    relativeMacroOffset += storedRelativeMacroOffset;
+}
 
-    // turn pseudo instructions into real instructions, by replacing all macro and section
-    // names with their corresponding values. also collapsing FWD and BWD
-    collapsePseudos();
+void removeWhitespace()
+{
+    while (current.op == TOKEN_NEWLINE)
+    {
+        getToken();
+    }
+}
 
-    return;
-    // set jumpedTo values for commands
-    for (int i = 0; i < jumpedToInstructions->size; i++)
-        instructions[*(int*)vecat(jumpedToInstructions, i)].jumpedTo = 1;
+void parseOther()
+{
+    // resetting values
+    storedRelativeMacroOffset = 0;
+    tokenIndex = 0;
+
+    getToken();
+    removeWhitespace();
+
+    // get macro values
+    parseMacros();
+    // the actual girth of parsing
+    
+    parseSections();
+
+    relativeMacroOffset += storedRelativeMacroOffset;
 }
 
 void parseStartAt()
 {
     getToken();
+    removeWhitespace();
+
     validateStrict(TOKEN_ID, "start", 1);
     validateStrict(TOKEN_ID, "at", 1);
 
@@ -74,6 +94,20 @@ void parseMacros()
         validateOp(TOKEN_ID, 0);
         char* macroName = current.lexeme;
 
+        int addOffset = 0;
+        getToken();
+
+        if (current.op == TOKEN_TILDA)
+        {
+
+            addOffset = 1;
+        }
+        else if (current.op != TOKEN_EQUALS)
+        {
+            errorSpecial(ERRTYP_PARSE, current.line, current.chi);
+            printf(ERR_NOEQUALS, tokenTypes[current.op]);
+        }
+
         getToken();
         validateOp(TOKEN_NUM, 0);
         char* macroValue = current.lexeme;
@@ -83,7 +117,17 @@ void parseMacros()
         {
             errorMacroExists(current.line, current.chi, macroName);
         }
-        mapset(macroMap, macroName, permintptr(strToInt(macroValue)));
+        int macroValueInt = strToInt(macroValue);
+        if (addOffset)
+        {
+            if (macroValueInt > storedRelativeMacroOffset)
+            {
+                storedRelativeMacroOffset = macroValueInt + 1;
+            }
+            macroValueInt += relativeMacroOffset;
+        }
+        
+        mapset(macroMap, macroName, permintptr(macroValueInt));
 
         getToken();
         validateOp(TOKEN_NEWLINE, 1);

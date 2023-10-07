@@ -1,6 +1,6 @@
 #include  "brain.h"
 
-#define VERSION "0.0.2"
+#define VERSION "0.0.3"
 
 void printTokens();
 void printInstructions();
@@ -9,13 +9,13 @@ int main(int argc, char** argv)
 {
     lieutenant(argc, argv);
 
-    int debugMode = ltnswitchv("--debug");
-    char* inputFile = ltnarg(0);
-    if (inputFile == NULL)
+    if (ltnargc() == 0)
     {
-        printf("BRAIN %s INSTALLED\n\t- assemble a program with: brain `filepath`\n\t- use swithc `--debug` for debug info\n\t- use `-o` or `-output` flag to specify output file destination", VERSION);
+        printf("BRAIN %s INSTALLED\n\t- assemble a program with: brain `filepath` `list of sugar includes`\n\t- use swithc `--debug` for debug info\n\t- use `-o` or `-output` flag to specify output file destination", VERSION);
         return 0;
     }
+
+    int debugMode = ltnswitchv("--debug");
 
     outPath = ltnflagv("-o");
     if (outPath == NULL)
@@ -28,13 +28,31 @@ int main(int argc, char** argv)
         }
     }
 
-    lex(inputFile);
+    lex(ltnarg(0));
     if (debugMode)
         printTokens();
 
-    parse();
+    parseFirst();
     if (debugMode)
         printInstructions();
+
+    for (int i = 1; i < ltnargc(); i++)
+    {
+        lex(ltnarg(i));
+        if (debugMode)
+            printTokens();
+
+        parseOther();
+        if (debugMode)
+            printInstructions();
+    }
+
+    // add termination instruction
+    addPseudoIns(INS_NULL, NULL);
+
+    // turn pseudo instructions into real instructions, by replacing all macro and section
+    // names with their corresponding values. also collapsing FWD and BWD
+    collapsePseudos();
 
     assemble();
 

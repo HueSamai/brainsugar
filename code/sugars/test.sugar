@@ -1,0 +1,10 @@
+; this program requires '.sugar' to be assembled with it
+start at main
+
+main:
+    ; testing display number
+    put 0, 10
+    put test, 49
+
+    call display_number
+    hlt

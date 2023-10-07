@@ -13,6 +13,7 @@
 #define ERR_MACROEXISTS "a macro with the name '%s' already exists!\npotential fixes:\n\t- give your macros unique names\n\t- make sure a macro and a section don't have the same name"
 #define ERR_UNKNOWNCOMMAND "unknow instruction '%s'!\npotential fixes:\n\t- make sure you have a ':' after each section name\n\t- make sure you typed the name of the instruction correctly\n\t- make sure the instruction you want to use goes by a different name than you remember"
 #define ERR_MACRONOTFOUND "use of an undefined macro/section '%s'!\npotential fixes:\n\t- make sure you spelled the macro/section name correctly\n\t- make sure you defined the macro/section."
+#define ERR_NOEQUALS "unexpected token! expected '=' or '~' got '%s'!\npotential fixes:\n\t- make sure you if you are including a .sugar file it doesn't start with 'start at ...'\n\t- make sure you use the format: macro_name = macro_value or macro_name ~ macro_value"
 
 void error(char* type, int line, int chi, char* description);
 void errorSpecial(char* type, int line, int chi);
