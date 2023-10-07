@@ -12,14 +12,19 @@ int main(int argc, char** argv)
     outPath = ltnflagv("-o");
     if (outPath == NULL)
     {
-        outPath = "temp.bf";
+        outPath = ltnflagv("-output");
+        if (outPath == NULL)
+        {
+            printf("BRAIN RUN ERROR: no `-o` or `-output` flag was specified.\n");
+            exit(1);
+        }
     }
 
     int debugMode = ltnswitchv("--debug");
     char* inputFile = ltnarg(0);
     if (inputFile == NULL)
     {
-        printf("BRAIN %s INSTALLED\n\t- assemble a program with: brain `filepath`\n\t- use swithc `--debug` for debug info\n\t- use `-o` flag to specify output file destination (default output path is `temp.bf`) ", VERSION);
+        printf("BRAIN %s INSTALLED\n\t- assemble a program with: brain `filepath`\n\t- use swithc `--debug` for debug info\n\t- use `-o` or `-output` flag to specify output file destination", VERSION);
         return 0;
     }
 

@@ -7,11 +7,11 @@ void lieutenant(int argc, char** argv);
 int ltnflagc();
 
 // get value of a flag
-// returns 0 if not found
+// returns NULL if not found
 char* ltnflagv(char* flagname);
 
 // get flag name from an index
-// returns 0 if index is out of bounds
+// returns NULL if index is out of bounds
 char* ltnflag(int index);
 
 // get switch count
@@ -23,7 +23,7 @@ int ltnswitchc();
 int ltnswitchv(char* switchname);
 
 // get switch from an index
-// returns 0 if index is out of bounds
+// returns NULL if index is out of bounds
 char* ltnswitch(int index);
 
 
@@ -31,5 +31,5 @@ char* ltnswitch(int index);
 int ltnargc();
 
 // get the command argument at the given index, ignoring the executable path, flags and switches
-// returns 0 if index is out of bounds
+// returns NULL if index is out of bounds
 char* ltnarg(int index);

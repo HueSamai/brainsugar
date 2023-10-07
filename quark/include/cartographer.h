@@ -31,7 +31,7 @@ map_t* mapcreate(int size);
 void mapset(map_t* map, char* key, void* value);
 
 // get value in map
-// returns 0 if failed
+// returns NULL if failed
 // returns value if succeeded
 void* mapget(map_t* map, char* key);
 

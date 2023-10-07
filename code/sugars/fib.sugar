@@ -44,7 +44,6 @@ main:
     put space, 32
     put debug1, 72
     put debug2, 74
-    
 
     inp x
     equn x,escape_char
