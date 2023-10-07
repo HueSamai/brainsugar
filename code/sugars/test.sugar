@@ -8,3 +8,4 @@ main:
 
     call display_number
     hlt
+

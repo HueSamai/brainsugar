@@ -148,7 +148,7 @@ Here are some other character prefixes for values:
 
 ## sections
 
-sections make jumps easier. your code MUST have an entry point section, which is specified at the beginning of the file by: start at
+sections make jumps easier. your code MUST have an entry point section, unless it is a sugar library, which is specified at the beginning of the file by: start at
 
 sections are declared by typing a name and then following them with a semi-colon (:).
 

@@ -1,4 +1,4 @@
-; no 'start at ...' because this is a sugar "library"
+; no 'start at ...' because this is a sugar library
 dn_units = r4
 dn_tens = r5
 dn_hundreds = r6
