@@ -1,6 +1,6 @@
 #include  "brain.h"
 
-#define VERSION "0.0.1"
+#define VERSION "0.0.2"
 
 void printTokens();
 void printInstructions();
@@ -8,6 +8,14 @@ void printInstructions();
 int main(int argc, char** argv)
 {
     lieutenant(argc, argv);
+
+    int debugMode = ltnswitchv("--debug");
+    char* inputFile = ltnarg(0);
+    if (inputFile == NULL)
+    {
+        printf("BRAIN %s INSTALLED\n\t- assemble a program with: brain `filepath`\n\t- use swithc `--debug` for debug info\n\t- use `-o` or `-output` flag to specify output file destination", VERSION);
+        return 0;
+    }
 
     outPath = ltnflagv("-o");
     if (outPath == NULL)
@@ -18,14 +26,6 @@ int main(int argc, char** argv)
             printf("BRAIN RUN ERROR: no `-o` or `-output` flag was specified.\n");
             exit(1);
         }
-    }
-
-    int debugMode = ltnswitchv("--debug");
-    char* inputFile = ltnarg(0);
-    if (inputFile == NULL)
-    {
-        printf("BRAIN %s INSTALLED\n\t- assemble a program with: brain `filepath`\n\t- use swithc `--debug` for debug info\n\t- use `-o` or `-output` flag to specify output file destination", VERSION);
-        return 0;
     }
 
     lex(inputFile);
