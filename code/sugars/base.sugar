@@ -1,0 +1,105 @@
+; no 'start at ...' because this is a sugar library
+
+; some macros
+RETURN = r0
+ARG1 = r1
+ARG2 = r2
+ARG3 = r3
+ARG4 = r4
+ARG5 = r5
+ARG6 = r6
+
+numtochar = x30
+
+; register's used by display number
+dn_units = r4
+dn_tens = r5
+dn_hundreds = r6
+
+; register's used by get_input
+
+in_char = r4
+in_termchar = c10 ; \n
+
+; get a number as input from the user using 'in_termchar' as the termination character
+get_number:
+    push in_char, ARG1, ARG2
+    put RETURN, 0
+
+    inp in_char
+    equn in_char, in_termchar
+    jnz FWD7
+        mov RETURN,ARG1
+        put ARG2,10
+        call multiply
+        add RETURN,in_char,RETURN
+        subn RETURN,numtochar
+    jmp BWD8
+
+    pull ARG2, ARG1, in_char
+    ret
+
+; display ARG1
+display_number:
+    push dn_units, dn_tens, dn_hundreds
+
+    mov ARG1, dn_units
+
+    put dn_tens,0
+    put dn_hundreds,0
+
+    cmpn dn_units,99
+    jfz FWD5
+        addn dn_hundreds,1
+        subn dn_units,100
+        cmpn dn_units,99
+    jmp BWD4
+
+    cmpn dn_units,9
+    jfz FWD5
+        addn dn_tens,1
+        subn dn_units,10
+        cmpn dn_units,9
+    jmp BWD4
+
+    jfz FWD4, dn_hundreds
+        addn dn_hundreds,numtochar
+        prt dn_hundreds
+        jmp FWD2
+
+    jfz FWD3,dn_tens
+    addn dn_tens,numtochar
+    prt dn_tens
+
+    addn dn_units,numtochar
+    prt dn_units
+
+    pull dn_hundreds, dn_tens, dn_units
+    ret
+
+; multiply ARG1's value by ARG2's value and output it in RETURN
+multiply:
+    put RETURN,0
+
+    jfz FWD4, ARG1
+        subn ARG1,1
+        add RETURN,ARG2,RETURN
+    jmp BWD3
+
+    ret
+
+; divide ARG1 by ARG2
+; remainder left in ARG1
+divide:
+    push ARG2
+    put RETURN,0
+    subn ARG2,1
+    cmp ARG1, ARG2
+    jfz FWD5
+        addn RETURN,1
+        sub ARG1,ARG2,ARG1
+        subn ARG1,1
+    jmp BWD5
+    pull ARG2
+    ret
+    

@@ -1,11 +1,47 @@
-; this program requires '.sugar' to be assembled with it
 start at main
 
-main:
-    ; testing display number
-    put 0, 10
-    put test, 49
+equals = r3
+x = r4
+space = r5
 
+main:
+    put x,47
+    put equals, 61
+    put space, 32
+
+    call get_number
+    mov RETURN, ARG1
     call display_number
-    hlt
+
+    prt x
+
+    call get_number
+    mov RETURN, ARG2
+    push ARG1
+    mov ARG2,ARG1
+    call display_number
+    pull ARG1
+
+    ; multiply them
+    call divide
+
+    prt equals
+
+    ; display result
+    push ARG1
+    mov RETURN, ARG1
+    call display_number
+    pull ARG1
+
+    jfz FWD6, ARG1
+        prt space
+        call display_number
+        prt x
+        mov ARG2, ARG1
+        call display_number
+
+    put x,127
+    prt x
+
+    hlt 
 
