@@ -30,7 +30,7 @@ int adrOffset = 10; // we have to add the stack pointer and stack size
 int stackPointer = 20;
 
 // the shadow offset
-int shadowOffset = -1;
+int shadowOffset = 30;
 
 int lineLength = 0;
 int noCommentLength = 60;
@@ -87,7 +87,7 @@ void moveTo(int adr)
 void toStart()
 {
     //+[-<+]-
-    addCommands("<+[-<+]-"); // what?
+    addCommands("+[-<+]-"); // what?
     dataPointer = 0;
 }
 
@@ -252,7 +252,8 @@ void moveToInAddress(int adr)
 {
     copy(adr, shadowOffset);
     moveTo(shadowOffset);
-    addCommands("[-[>>+<<-]>>]<");
+    addCommands("[->[-]<[>+<-]>]");
+    moveBy(-shadowOffset);
 }
 
 void moveFromPtr(int ptr, int adrCopyTo)
@@ -463,23 +464,8 @@ void addBoilerPlateFooter(int inc)
     //repeatCommand('+', inc);
 }
 
-int indexToAddress(int index)
-{
-    return index * 2 + adrOffset;
-}
-
 void assemble()
 {
-    // so that shadow bits are aligned with the first bit
-    if (adrOffset % 2 == 0)
-    {
-        adrOffset++;
-        printf("NEW ADR OFFSET %d\n", adrOffset);
-    }
-
-    stackPointer = indexToAddress(stackPointer);
-    shadowOffset = adrOffset + 1;
-
     int i = 1;
     int wasPreviousJumpedTo = 1;
     int compoundStack = 0;
@@ -490,7 +476,7 @@ void assemble()
     // this is stored as a jump command, so we set the program counter to the first arg
     // of the first instruction
     put(programCounter, instructions[0].args[0]); 
-    put(stackPointer, (stackPointer - adrOffset) / 2);
+    put(stackPointer, stackPointer);
     addCommand('[');
 
     toStart();
@@ -518,52 +504,52 @@ void assemble()
         switch (instructions[i].op)
         {
             case INS_PUT:
-                put(indexToAddress(args[0]), args[1]);
+                put(args[0] + adrOffset, args[1]);
                 break;
             case INS_MOV:
-                copy(indexToAddress(args[0]), indexToAddress(args[1]));
+                copy(args[0] + adrOffset, args[1] + adrOffset);
                 break;
             case INS_MOO:
-                copy(regC, indexToAddress(args[0]));
+                copy(regC, args[0] + adrOffset);
                 break;
             case INS_ADD:
-                add(indexToAddress(args[0]), indexToAddress(args[1]));
+                add(args[0] + adrOffset, args[1] + adrOffset);
                 if (args[2] != -1)
                 {
-                    copy(regC, indexToAddress(args[2]));
+                    copy(regC, args[2] + adrOffset);
                 }
                 break;
             case INS_ADDN:
-                addn(indexToAddress(args[0]), args[1]);
+                addn(args[0] + adrOffset, args[1]);
                 break;
             case INS_SUB:
-                sub(indexToAddress(args[0]), indexToAddress(args[1]));
+                sub(args[0] + adrOffset, args[1] + adrOffset);
                 if (args[2] != -1)
                 {
-                    copy(regC, indexToAddress(args[2]));
+                    copy(regC, args[2] + adrOffset);
                 }
                 break;
             case INS_SUBN:
                 subn(args[0] + adrOffset, args[1]);
                 break;
             case INS_CMP:
-                compareIfGreater(indexToAddress(args[0]), indexToAddress(args[1]));
+                compareIfGreater(args[0] + adrOffset, args[1] + adrOffset);
                 break;
             case INS_CMPN:
-                compareIfGreaterN(indexToAddress(args[0]), args[1]);
+                compareIfGreaterN(args[0] + adrOffset, args[1]);
                 break;
             case INS_EQU:
-                equals(indexToAddress(args[0]), indexToAddress(args[1]));
+                equals(args[0] + adrOffset, args[1] + adrOffset);
                 break;
             case INS_EQUN:
-                equalsn(indexToAddress(args[0]), args[1]);
+                equalsn(args[0] + adrOffset, args[1]);
                 break;
             case INS_INV:
                 if (args[0] == -1)
                 {
                     args[0] = regC - adrOffset;
                 }
-                invert(indexToAddress(args[0]));
+                invert(args[0] + adrOffset);
                 break;
             case INS_JMP:
                 jump(args[0]);
@@ -573,14 +559,14 @@ void assemble()
                 {
                     args[1] = regC - adrOffset;
                 }
-                jumpIfZero(args[0], indexToAddress(args[1]));
+                jumpIfZero(args[0], args[1] + adrOffset);
                 break;
             case INS_JNZ:
                 if (args[1] == -1)
                 {
                     args[1] = regC - adrOffset;
                 }
-                jumpNotZero(args[0], indexToAddress(args[1]));
+                jumpNotZero(args[0], args[1] + adrOffset);
                 break;
             case INS_HLT:
                 jump(0);
@@ -598,23 +584,23 @@ void assemble()
                 pull(args);
                 break;
             case INS_MTP:
-                moveIntoPtr(indexToAddress(args[0]), indexToAddress(args[1]));
+                moveIntoPtr(args[0] + adrOffset, args[1] + adrOffset);
                 break;
             case INS_MFP:
-                moveFromPtr(indexToAddress(args[0]), indexToAddress(args[1]));
+                moveFromPtr(args[0] + adrOffset, args[1] + adrOffset);
                 break;
             case INS_PRT:
-                output(indexToAddress(args[0]));
+                output(args[0] + adrOffset);
                 break;
             case INS_INP:
-                input(indexToAddress(args[0]));
+                input(args[0] + adrOffset);
                 break;
             case INS_PRTP:
-                moveToInAddress(indexToAddress(args[0]));
+                moveToInAddress(args[0] + adrOffset);
                 addCommand('.');
                 break;
             case INS_PIN:
-                moveToInAddress(indexToAddress(args[0]));
+                moveToInAddress(args[0] + adrOffset);
                 addCommand(',');
                 break;
             case INS_RAW:
