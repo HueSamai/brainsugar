@@ -1,4 +1,3 @@
-<!-->STOLE THIS FROM GODOT LOL. Just needed to see how to do it...<-->
 <p align="center">
     <img src="sugar-logo.png" width="400" alt="Godot Engine logo">
 </p>
