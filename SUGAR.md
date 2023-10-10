@@ -1,4 +1,7 @@
-![A pixel-art sugar cube](sugar-logo.png?raw=true "SUGAR")
+<!-->STOLE THIS FROM GODOT LOL. Just needed to see how to do it...<-->
+<p align="center">
+    <img src="sugar-logo.png" width="400" alt="Godot Engine logo">
+</p>
 
 # What the brainfuck is SUGAR?
 
