@@ -1,5 +1,10 @@
-<p align="center">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Pixelify+Sans&display=swap" rel="stylesheet">
+
+<p align="center" style="font-family: 'Pixelify Sans', sans-serif;">
     <img src="sugar-logo.png" width="400" alt="Godot Engine logo">
+    SUGAR
 </p>
 
 # What the brainfuck is SUGAR?
