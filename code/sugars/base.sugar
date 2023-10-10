@@ -90,7 +90,7 @@ multiply:
 
 ; divide ARG1 by ARG2
 ; remainder left in ARG1
-divide:
+/:
     push ARG2
     put RETURN,0
     subn ARG2,1

@@ -64,7 +64,7 @@ void addtoken(int op, char* lexeme)
 
 int isstopchar(char c)
 {
-    return isws(c) || c == ',' || c == EOF;
+    return isws(c) || c == ',' || c == EOF || c == ']';
 }
 
 void lexnum(int step)
@@ -167,6 +167,20 @@ void lexnext()
     if (c == '~')
     {
         addtoken(TOKEN_TILDA, NULL);
+        c = nextc();
+        return;
+    }
+
+    if (c == '[')
+    {
+        addtoken(TOKEN_SQR_OPEN, NULL);
+        c = nextc();
+        return;
+    }
+
+    if (c == ']')
+    {
+        addtoken(TOKEN_SQR_CLOSE, NULL);
         c = nextc();
         return;
     }

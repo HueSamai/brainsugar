@@ -48,7 +48,7 @@ int main(int argc, char** argv)
     }
 
     // add termination instruction
-    addPseudoIns(INS_NULL, NULL);
+    addPseudoIns(INS_NULL, NULL, NULL);
 
     // turn pseudo instructions into real instructions, by replacing all macro and section
     // names with their corresponding values. also collapsing FWD and BWD

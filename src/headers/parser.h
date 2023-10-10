@@ -25,16 +25,14 @@
 #define INS_RET 17
 #define INS_PUSH 18
 #define INS_PULL 19
-#define INS_MTP 20
-#define INS_MFP 21
+#define INS_PJUMP 20
+#define INS_PCALL 21
 #define INS_PRT 22
-#define INS_PRTP 23
 #define INS_INP 24
-#define INS_PIN 25
 #define INS_RAW 26
 #define INS_GUAD 27
 
-static char opcodes[OPCODE_COUNT][5] = {
+static char opcodes[OPCODE_COUNT][6] = {
     "put",
     "mov",
     "moo",
@@ -55,27 +53,21 @@ static char opcodes[OPCODE_COUNT][5] = {
     "ret",
     "push",
     "pull",
-    "mtp",
-    "mfp",
+    "pjump",
+    "pcall",
     "prt",
-    "prtp",
+    "",
     "inp",
-    "pin",
+    "",
     "raw",
     "guad",
 };
 
-typedef struct pseudoins
-{
-    int op;
-    char* args;
-    int line;
-} pseudoins_t;
-
 typedef struct ins
 {
     int op;
-    int args[99];
+    int args[9];
+    int* isPtr;
     int jumpedTo; // for compounding
 } ins_t;
 
@@ -86,6 +78,14 @@ void parseOther();
 
 
 // ----------------------PRIVATE-------------------------
+typedef struct pseudoins
+{
+    int op;
+    char* args;
+    int* isPtr;
+    int line;
+} pseudoins_t;
+
 vector_t* jumpedToInstructions;
 
 void parseStartAt();
@@ -98,7 +98,7 @@ void validateLexeme(char* lexeme, int thenNext);
 void validateStrict(int op, char* lexeme, int thenNext);
 void getToken();
 int peekNext();
-void addPseudoIns(int op, char* args);
+void addPseudoIns(int op, int* pointers, char* args);
 int* permintptr(int);
 int strToInt(char* str);
 int getInsOp();

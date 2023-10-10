@@ -82,7 +82,7 @@ void parseStartAt()
     buffer[k] = ARGS_END;
     buffer[k + 1] = '\0';
 
-    addPseudoIns(INS_JMP, permptr(buffer));
+    addPseudoIns(INS_JMP, permintptr(0), permptr(buffer));
     getToken();
     validateOp(TOKEN_NEWLINE, 1);
 }
@@ -99,13 +99,13 @@ void parseMacros()
 
         if (current.op == TOKEN_TILDA)
         {
-
             addOffset = 1;
         }
         else if (current.op != TOKEN_EQUALS)
         {
             errorSpecial(ERRTYP_PARSE, current.line, current.chi);
             printf(ERR_NOEQUALS, tokenTypes[current.op]);
+            exit(1);
         }
 
         getToken();
@@ -136,17 +136,27 @@ void parseMacros()
 
 void parseIns()
 {
+    int* pointers = malloc(sizeof(int) * 9);
+
     validateOp(TOKEN_ID, 0);
     int op = getInsOp();
     getToken();
     int bidx = 0;
     int i = 0;
+    int argIndex = 0;
 
     // get args
     char buffer[999];
-    if (current.op != TOKEN_NEWLINE)
+    if (current.op != TOKEN_NEWLINE && current.op != TOKEN_NULL)
+    {
         while (1)
         {
+            int isPtr = 0;
+            if (current.op == TOKEN_SQR_OPEN)
+            {
+                isPtr = 1;
+                getToken();
+            }
             i = 0;
             do
             {
@@ -156,6 +166,12 @@ void parseIns()
             buffer[bidx - 1] = ARG_SEPARATION;
             getToken();
 
+            if (isPtr)
+            {
+                validateOp(TOKEN_SQR_CLOSE, 1);
+            }
+            pointers[argIndex++] = isPtr;
+
             if (current.op == TOKEN_NEWLINE || current.op == TOKEN_NULL)
             {
                 break;
@@ -163,12 +179,15 @@ void parseIns()
 
             validateOp(TOKEN_COMMA, 1);
         }
+    }
     else
+    {
         bidx++;
+    }
     buffer[bidx - 1] = ARGS_END;
     buffer[bidx] = '\0';
 
-    addPseudoIns(op, permptr(buffer));
+    addPseudoIns(op, pointers, permptr(buffer));
 
     if (current.op != TOKEN_NULL)
         validateOp(TOKEN_NEWLINE, 1);
@@ -203,6 +222,7 @@ void collapsePseudo()
 {
     pseudoins_t currentPseudo = pseudoInstructions[insIndex];
     instructions[insIndex].op = currentPseudo.op;
+    instructions[insIndex].isPtr = currentPseudo.isPtr;
     int p = 0; // stores current char index in args
     int k = 0; // stores current arg index
     while (currentPseudo.args[p] != ARGS_END)
@@ -342,9 +362,10 @@ void validateStrict(int op, char* lexeme, int thenNext)
     if (thenNext) getToken();
 }
 
-void addPseudoIns(int op, char* args)
+void addPseudoIns(int op, int* arePointers, char* args)
 {
     pseudoInstructions[insIndex].op = op;
+    pseudoInstructions[insIndex].isPtr = arePointers;
     pseudoInstructions[insIndex].args = args;
     pseudoInstructions[insIndex++].line = current.line;
 }

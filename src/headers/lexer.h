@@ -10,13 +10,19 @@
 #define TOKEN_NEWLINE 4
 #define TOKEN_EQUALS 5
 #define TOKEN_TILDA 6
+#define TOKEN_SQR_OPEN 7
+#define TOKEN_SQR_CLOSE 8
 
-static char tokenTypes[5][20] = {
+static char tokenTypes[9][20] = {
     "identifier",
     "number",
     "colon",
-    "comma",
-    "newline"
+    ",",
+    "newline",
+    "=",
+    "~",
+    "[",
+    "]"
 };
 
 typedef struct token

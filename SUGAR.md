@@ -10,9 +10,11 @@ I have also made a programming language called FUDGE, which compiles into SUGAR.
 ## some notes
 reg is short for register
 ins is short for instruction
-ptr is short for pointer
 
-NOTE: ptr is a reg which stores the address of another reg
+a register can be surrounded by square brackets '[]', and it will be used as a pointer.
+EXAMPLE:
+```prt [r0]```
+this will print the value of the register which r0 points to.
 
 the output reg or regC, is a register which comparisons and jumps are by default based off of. this is different to the operations 'out' argument. that is just a normal register, which the result of the output is copied to.
 
@@ -86,24 +88,19 @@ NOTE: hlt is equivalent to jmp 0
 
 NOTE: this means if you push before calling, you need to pull in the reverse order you pushed.
 
-## pointers
-```mtp reg1,ptr                    - move into pointer: move contents of reg1 into reg which ptr points to```
+## pointer jumping
+```pjump reg1                      - pointer jump: jump to the instruction index stores in reg1```
 <br>
 
-```mfp ptr,reg1                    - move from pointer: move contents of reg which ptr points to into reg1```
+```pcall reg1                      - pointer call: call the section pointed to by reg1```
 <br>
 
 ## io
 ```prt reg                         - print: print value at reg into the console```
 <br>
 
-```prtp ptr                        - print pointer: print the value at reg, which ptr points to```
-<br>
-
 ```inp reg                         - input: store next char of input into reg```
 <br>
-
-```pin ptr                         - pointer input: store next char of input into reg, which ptr points to```
 
 ## special
 ```raw bf,...                      - raw: run raw brainfuck code given. takes any number of args. check RAW section for info.```
