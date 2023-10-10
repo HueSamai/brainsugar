@@ -1,3 +1,5 @@
+![A pixel-art sugar cube](sugar-logo.png?raw=true "SUGAR")
+
 # What the brainfuck is SUGAR?
 
 SUGAR is an assembly language. it is assembled with the 'brain' compiler into brainfuck code. This is a document detailing the syntax and instruction list of SUGAR, so that you can use it.
