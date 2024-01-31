@@ -1,4 +1,20 @@
 start at main
 
+stack = r0
+
 main:
+    put stack, n1
+
+    call stack_add
+    call stack_add
+    call stack_add
+    call stack_add
+    call stack_add
+    call stack_add
+
     hlt
+
+stack_add:
+    addn [stack], 10
+    addn stack, 1
+    ret

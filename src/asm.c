@@ -18,7 +18,7 @@ OOOH. I remember, it was removing MFP,PIN, OUTP, and MTP from the instruction li
 */
 
 int bfi = 0;
-char bf[99999];
+char bf[99999999];
 
 // tells us how many registers are used for things
 // address 0 is reserved to find our way back to the start
@@ -43,10 +43,10 @@ int dataPointer = 0;
 
 int adrOffset = 12; // we have to add the stack pointer and stack size
 
-int stackPointer = 30;
+int stackPointer = 200;
 
 // the shadow offset
-int shadowOffset = 40;
+int shadowOffset = 256;
 
 int lineLength = 0;
 int noCommentLength = 60;
@@ -271,14 +271,14 @@ void invert(int adr, int isPtr)
     addCommand('[');
         addCommands("[-]");
         repeatCommand('-', y);
-        if (isPtr) toStart();
+        toStart();
         moveTo(ZERO, 0);
     addCommand(']');
 
     toStart();
     moveTo(adr, isPtr);
     repeatCommand('+', y);
-    if (isPtr) toStart();
+    toStart();
 }
 
 void equals(int adr1, int adr2, int isAdr1Ptr, int isAdr2Ptr)
@@ -393,6 +393,7 @@ void jumpIfZero(int ins, int adr, int isPtr)
 {
     copy(adr, buffer2, isPtr, 0);
     invert(adr, isPtr); // we invert it // this is a sub comment, commenting on how bad my comment was lol
+    moveTo(adr, isPtr);
     addCommand('[');
         jump(ins);
         moveTo(ZERO, 0);
@@ -418,7 +419,8 @@ void push(int* adrs, int* isPtr)
     while (adrs[i] != -1)
     {
         addn(stackPointer, 1, 0);
-        moveIntoPtr(adrs[i] + adrOffset, stackPointer, isPtr[i], 0);
+        // moveIntoPtr(adrs[i] + adrOffset, stackPointer, isPtr[i], 0);
+        copy(adrs[i] + adrOffset, stackPointer, isPtr[i], 1);
         i++;
     }
 }
@@ -428,7 +430,8 @@ void pull(int* adrs, int* isPtr)
     int i = 0;
     while (adrs[i] != -1)
     {
-        moveFromPtr(stackPointer, adrs[i] + adrOffset, 0, isPtr[i]);
+        //moveFromPtr(stackPointer, adrs[i] + adrOffset, 0, isPtr[i]);
+        copy(stackPointer, adrs[i] + adrOffset, 1, isPtr[i]);
         subn(stackPointer, 1, 0);
         i++;
     }
@@ -546,6 +549,7 @@ void addBoilerPlateHeader()
 
 void addBoilerPlateFooter(int inc)
 {
+    toStart();
     moveTo(ZERO, 0);
     addCommand(']');
     toStart();
@@ -654,13 +658,15 @@ void assemble()
                 if (args[1] == -1)
                 {
                     args[1] = regC - adrOffset;
+                    isPtr[1] = 0;
                 }
-                jumpIfZero(args[0], args[1] + adrOffset, isPtr[0]);
+                jumpIfZero(args[0], args[1] + adrOffset, isPtr[1]);
                 break;
             case INS_JNZ:
                 if (args[1] == -1)
                 {
                     args[1] = regC - adrOffset;
+                    isPtr[1] = 0;
                 }
                 jumpNotZero(args[0], args[1] + adrOffset, isPtr[1]);
                 break;
@@ -698,6 +704,7 @@ void assemble()
         }
         i++;
 
+        addCommand('#');
         addBoilerPlateFooter(compoundStack);
     }
 

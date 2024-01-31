@@ -33,8 +33,6 @@ int main(int argc, char** argv)
         printTokens();
 
     parseFirst();
-    if (debugMode)
-        printInstructions();
 
     for (int i = 1; i < ltnargc(); i++)
     {
@@ -43,8 +41,6 @@ int main(int argc, char** argv)
             printTokens();
 
         parseOther();
-        if (debugMode)
-            printInstructions();
     }
 
     // add termination instruction
@@ -53,6 +49,9 @@ int main(int argc, char** argv)
     // turn pseudo instructions into real instructions, by replacing all macro and section
     // names with their corresponding values. also collapsing FWD and BWD
     collapsePseudos();
+
+    if (debugMode)
+        printInstructions();
 
     assemble();
 
@@ -99,7 +98,7 @@ void printInstructions()
         j = 0;
         while (instructions[i].args[j] != -1)
         {
-            printf("%d ", instructions[i].args[j]);
+            printf("%d (ptr? %d) ", instructions[i].args[j], instructions[i].isPtr[j]);
             j++;
         }
         printf(". jumped to? %d\n", instructions[i].jumpedTo);

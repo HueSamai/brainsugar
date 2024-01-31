@@ -137,6 +137,10 @@ void parseMacros()
 void parseIns()
 {
     int* pointers = malloc(sizeof(int) * 9);
+    for (int blah = 0; blah < 9; blah++)
+    {
+        pointers[blah] = 0;
+    }
 
     validateOp(TOKEN_ID, 0);
     int op = getInsOp();
